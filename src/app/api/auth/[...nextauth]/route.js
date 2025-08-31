@@ -2,13 +2,14 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "@/lib/firebaseClient"; // Adjust path to your Firebase config
+import { getApps, initializeApp } from "firebase/app";
+import { firebaseConfig } from "@/lib/firebaseClient";
 
-const app = initializeApp(firebaseConfig);
+// Prevent multiple Firebase app initialization
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 const auth = getAuth(app);
 
-export const authOptions = {
+const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -53,4 +54,6 @@ export const authOptions = {
   },
 };
 
-export default NextAuth(authOptions);
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };

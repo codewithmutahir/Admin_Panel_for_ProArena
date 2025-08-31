@@ -463,7 +463,7 @@ export default function Transactions() {
                               <DollarSign className="h-5 w-5" />
                             </div>
                             <div>
-                              <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+                              <h3 className="text-lg font-semibold text-slate-900">
                                 {tx.type.toUpperCase()} • {tx.amount} Coins
                               </h3>
                               <div className="flex items-center gap-2 mt-1">
@@ -510,7 +510,7 @@ export default function Transactions() {
                             <div className="flex items-center gap-3 text-sm">
                               <DollarSign className="h-4 w-4 text-slate-400" />
                               <div>
-                                <span className="text-slate-500">Current Balance:</span>
+                                <span className="text-slate-500">Account Balance:</span>
                                 <span className="ml-2 font-bold text-green-600">
                                   {user?.coins || 0} Coins
                                 </span>
