@@ -12,7 +12,8 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+// Prevent re-initializing Firebase app
+const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 const authOptions = {
@@ -24,9 +25,7 @@ const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          return null;
-        }
+        if (!credentials?.email || !credentials?.password) return null;
 
         try {
           const userCredential = await signInWithEmailAndPassword(
@@ -34,7 +33,7 @@ const authOptions = {
             credentials.email,
             credentials.password
           );
-          
+
           return {
             id: userCredential.user.uid,
             email: userCredential.user.email,
@@ -52,20 +51,19 @@ const authOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-      }
+      if (user) token.id = user.id;
       return token;
     },
     async session({ session, token }) {
-      if (token) {
-        session.user.id = token.id;
-      }
+      if (token?.id) session.user.id = token.id;
       return session;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
 
-const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+// ✅ App Router requires GET and POST export
+const handler = (req, ctx) => NextAuth(req, ctx, authOptions);
+
+export const GET = handler;
+export const POST = handler;
