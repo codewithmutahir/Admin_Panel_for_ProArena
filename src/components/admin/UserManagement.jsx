@@ -37,7 +37,6 @@ import {
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -70,8 +69,8 @@ export default function UserManagement({
   useEffect(() => {
     const initialMap = {};
     users.forEach((user) => {
-      initialMap[user.id] = user.WonTournaments || 0;
-    });+
+      initialMap[user.id] = user.wonTournaments || 0;
+    });
     setWonTournamentsMap(initialMap);
   }, [users]);
 
@@ -87,7 +86,7 @@ export default function UserManagement({
     try {
       setUpdatingUserId(userId);
       await updateDoc(doc(db, "users", userId), {
-        WonTournaments: wonTournaments,
+        wonTournaments: wonTournaments,
       });
       setAlert({
         show: true,
@@ -96,7 +95,7 @@ export default function UserManagement({
       });
       setUpdatingUserId(null);
     } catch (error) {
-      console.error("Error updating WonTournaments:", error);
+      console.error("Error updating wonTournaments:", error);
       setAlert({
         show: true,
         message: "Failed to update.",
@@ -109,7 +108,10 @@ export default function UserManagement({
   return (
     <>
       {/* AlertDialog */}
-      <AlertDialog open={alert.show} onOpenChange={() => setAlert((prev) => ({ ...prev, show: false }))}>
+      <AlertDialog
+        open={alert.show}
+        onOpenChange={() => setAlert((prev) => ({ ...prev, show: false }))}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
