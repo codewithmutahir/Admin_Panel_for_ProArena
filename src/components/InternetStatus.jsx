@@ -10,7 +10,7 @@ export default function InternetStatus() {
       const timeout = setTimeout(() => controller.abort(), 5000); // 5s timeout
 
       // Ping a reliable endpoint (favicon is tiny and cached)
-      const response = await fetch("/favicon.ico?check=" + Date.now(), {
+      const response = await fetch("/icon.png?check=" + Date.now(), {
         method: "HEAD",
         cache: "no-store",
         signal: controller.signal,

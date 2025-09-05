@@ -22,7 +22,8 @@ import CategoryManagement from "@/components/admin/CategoryManagement";
 import Transactions from "@/components/admin/Transactions";
 import { serverTimestamp } from "firebase/firestore";
 import { Skeleton } from "@/components/ui/skeleton";
-import Test from "./../../components/test.jsx";
+import MoreScreenManager from '../../components/admin/MoreScreenManager';
+import FeedbackManger from '../../components/admin/FeedbackManager';
 
 const auth = getAuth();
 const db = getFirestore();
@@ -314,6 +315,13 @@ export default function Dashboard() {
             <div className="text-center py-12">
               <Transactions />
             </div>
+          )}
+          {activeTab === "app-management" && (
+            <MoreScreenManager />
+          )}
+
+          {activeTab === "feedback" && (
+            <FeedbackManger />
           )}
         </main>
       </div>

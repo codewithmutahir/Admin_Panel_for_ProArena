@@ -27,5 +27,5 @@ if (hasRequiredConfig) {
   console.warn('Firebase config incomplete. Check environment variables.');
 }
 
-export { auth, db, firebaseConfig };
+export { auth, db, firebaseConfig, app };
 export default app;
