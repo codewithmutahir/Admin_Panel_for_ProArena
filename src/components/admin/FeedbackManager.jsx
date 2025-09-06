@@ -24,7 +24,7 @@ const FeedbackManager = () => {
   const [emailStatus, setEmailStatus] = useState('');
   const previousFeedbackIds = useRef(new Set());
 
-  // Function to send email notification using Resend
+  // Function to send email notification
   const sendEmailNotification = async (feedback) => {
     try {
       setEmailStatus('Sending email notification...');
@@ -36,17 +36,15 @@ const FeedbackManager = () => {
         body: JSON.stringify({ feedback }),
       });
 
-      const data = await response.json();
-
       if (response.ok) {
-        setEmailStatus(`Email notification sent successfully! ${data.emailId ? `(ID: ${data.emailId})` : ''}`);
+        setEmailStatus('Email notification sent successfully!');
         setTimeout(() => setEmailStatus(''), 3000);
       } else {
-        throw new Error(data.message || 'Failed to send email');
+        throw new Error('Failed to send email');
       }
     } catch (error) {
       console.error('Error sending email:', error);
-      setEmailStatus(`Failed to send email notification: ${error.message}`);
+      setEmailStatus('Failed to send email notification');
       setTimeout(() => setEmailStatus(''), 5000);
     }
   };
@@ -70,11 +68,9 @@ const FeedbackManager = () => {
               !previousFeedbackIds.current.has(feedback.id)
             );
             
-            // Send email for each new feedback (with a small delay to prevent spam)
-            newFeedbacks.forEach((feedback, index) => {
-              setTimeout(() => {
-                sendEmailNotification(feedback);
-              }, index * 1000); // 1 second delay between emails
+            // Send email for each new feedback
+            newFeedbacks.forEach(feedback => {
+              sendEmailNotification(feedback);
             });
           }
           
