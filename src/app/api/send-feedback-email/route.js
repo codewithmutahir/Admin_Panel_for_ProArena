@@ -63,7 +63,7 @@ export async function POST(request) {
     // EmailJS configuration
     const emailjsConfig = {
       service_id: 'service_4lpts7s',
-      template_id: 'template_your_template_id', // You need to replace this with your actual template ID
+      template_id: 'template_t4hmovn', // Replace with your actual template ID from the screenshot
       public_key: 'c5Ei2FkzB2ky27bBi',
       template_params: templateParams
     };
