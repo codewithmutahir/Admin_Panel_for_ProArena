@@ -1,6 +1,8 @@
 // app/api/send-feedback-email/route.js
-import nodemailer from "nodemailer";
+import { Resend } from 'resend';
 import { NextResponse } from "next/server";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request) {
   try {
@@ -12,15 +14,6 @@ export async function POST(request) {
         { status: 400 }
       );
     }
-
-    // Create transporter - using Gmail
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_APP_PASSWORD,
-      },
-    });
 
     const formatDate = (date) => {
       return new Date(date).toLocaleString("en-US", {
@@ -135,18 +128,28 @@ export async function POST(request) {
       </html>
     `;
 
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: "mutharsoomro13@gmail.com",
-      subject: `🔔 New ${feedback.type} feedback received - ${getStars(
-        feedback.rating
-      )}`,
+    // Send email using Resend
+    const { data, error } = await resend.emails.send({
+      from: 'Feedback System <feedback@yourdomain.com>', // Replace with your verified domain
+      to: ['mutharsoomro13@gmail.com'],
+      subject: `🔔 New ${feedback.type} feedback received - ${getStars(feedback.rating)}`,
       html: emailHTML,
-    };
+    });
 
-    await transporter.sendMail(mailOptions);
+    if (error) {
+      console.error('Resend error:', error);
+      return NextResponse.json(
+        { message: "Failed to send email", error: error.message },
+        { status: 500 }
+      );
+    }
 
-    return NextResponse.json({ message: "Email sent successfully" });
+    console.log('Email sent successfully:', data);
+    return NextResponse.json({ 
+      message: "Email sent successfully",
+      emailId: data?.id 
+    });
+
   } catch (error) {
     console.error("Error sending email:", error);
     return NextResponse.json(
